@@ -21,11 +21,11 @@
 	/>
 	<UserMacro
 		Name="AtkMinorVersion"
-		Value="24"
+		Value="27"
 	/>
 	<UserMacro
 		Name="AtkMicroVersion"
-		Value="0"
+		Value="90"
 	/>
 	<UserMacro
 		Name="AtkVersion"
@@ -41,7 +41,7 @@
 	/>
 	<UserMacro
 		Name="AtkBinaryAge"
-		Value="2410"
+		Value="2790"
 	/>
 	<UserMacro
 		Name="OahTargetVersion"
