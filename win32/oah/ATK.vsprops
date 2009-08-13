@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="ATK"
+	InheritedPropertySheets="$(OAH_INSTALLED_PATH)\vsprops\oah-PC.vsprops"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="$(IntDir);..\..;..\..\atk"
+		PreprocessorDefinitions="HAVE_CONFIG_H;G_DISABLE_DEPRECATED;ATK_COMPILATION;ATK_LOCALEDIR=\&quot;/share/locale\&quot;"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="libintl-proxy.lib"
+		ModuleDefinitionFile="$(IntDir)\atk.def"
+	/>
+	<UserMacro
+		Name="AtkMajorVersion"
+		Value="1"
+	/>
+	<UserMacro
+		Name="AtkMinorVersion"
+		Value="24"
+	/>
+	<UserMacro
+		Name="AtkMicroVersion"
+		Value="0"
+	/>
+	<UserMacro
+		Name="AtkVersion"
+		Value="$(AtkMajorVersion).$(AtkMinorVersion).$(AtkMicroVersion)"
+	/>
+	<UserMacro
+		Name="AtkApiVersion"
+		Value="$(AtkMajorVersion).0"
+	/>
+	<UserMacro
+		Name="AtkInterfaceAge"
+		Value="1"
+	/>
+	<UserMacro
+		Name="AtkBinaryAge"
+		Value="2410"
+	/>
+	<UserMacro
+		Name="OahTargetVersion"
+		Value="-$(AtkApiVersion)"
+	/>
+</VisualStudioPropertySheet>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Module Id="atkdev" Version="@VERSION@.0" Language="1033">
+		<Package Id="{19B52193-F9C7-4797-A7ED-3A84857E748D}"
+				Description="Development package without source code, but includes: headers, import libraries, binaries and pkg-config files"
+				Manufacturer="Free Software Community" InstallerVersion="300" />
+
+		<Dependency RequiredId="atk.64D4B7CD_57AA_4100_9F65_6CB6D57E7099" RequiredLanguage="0" RequiredVersion="@VERSION@" />
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="MODULE_DIR" Name=".">
+				<Directory Id="ModuleInclude" Name="include">
+					<Directory Id="AtkTopLevelInclude" Name="atk-@API_VERSION@">
+						<Directory Id="AtkInclude" Name="atk">
+							<Component Id="includes" Guid="{6CBA55A4-A88E-4eb8-AE64-743F8A8836E4}">
+								%(include/atk-@API_VERSION@/atk_files)s
+							</Component>
+						</Directory>
+					</Directory>
+				</Directory>
+
+				<Directory Id="ModuleLib" Name="lib">
+					<Component Id="libs" Guid="{FACFBB9D-DD18-4147-88C8-E2AF75305F4F}">
+						%(lib_files)s
+					</Component>
+
+					<Directory Id="LibPkgConfig" Name="pkgconfig">
+						<Component Id="pcs" Guid="{70C5A5E6-AEF3-4921-8F68-9918C9DAAE9B}">
+							%(pc_files)s
+						</Component>
+					</Directory>
+				</Directory>
+
+				<Directory Id="ModuleRedist" Name="redist">
+					<Component Id="msms" Guid="{675D6D07-D998-49ac-AB41-6A76C5E685D1}">
+						<File Id="atk.msm" Source="Win32\atk.msm" />
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>

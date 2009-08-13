@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Module Id='atk' Version='@VERSION@.0' Language="1033">
+		<Package Id="{64D4B7CD-57AA-4100-9F65-6CB6D57E7099}"
+				Description="Accessibility Tookit, which will be used obtain accessibily information from GTK+ and GNOME widgets"
+				Manufacturer="Free Software Community" InstallerVersion="300" />
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='MODULE_DIR' Name='.'>
+				<Directory Id="FossBinDir" Name="bin">
+					<Component Id="libatk" Guid="{19C7B56D-48C5-4e9f-9030-31C6CA4B7A81}">
+						<File Id="libatk_@API_VERSION@.dll" Source="..\Win32\Release\bin\libatk-@API_VERSION@.dll" />
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>
