@@ -1,0 +1,108 @@
+# vim: ft=python expandtab
+import tempfile
+import re
+import subprocess
+import os
+
+Import('env')
+
+env['PDB'] = 'libatk.pdb'
+
+env.Append(CPPDEFINES = ["G_DISABLE_DEPRECATED", 
+                         "ATK_DISABLE_DEPRECATED",
+                         "ATK_COMPILATION",
+                         ('ATK_LOCALEDIR', r'"\"' + env['PREFIX'].replace('\\', '\\\\') + r'share\\locale\""')])
+env.Append(CPPPATH=['#', '#atk'])
+
+atk_headers = Split("\
+        atk.h			\
+        atkaction.h		\
+        atkcomponent.h		\
+        atkdocument.h		\
+        atkeditabletext.h	\
+        atkgobjectaccessible.h	\
+        atkhyperlink.h		\
+        atkhyperlinkimpl.h	\
+        atkhypertext.h		\
+        atknoopobject.h		\
+        atknoopobjectfactory.h	\
+        atkobject.h		\
+	atkobjectfactory.h	\
+        atkimage.h		\
+        atkregistry.h		\
+        atkrelation.h		\
+        atkrelationtype.h	\
+        atkrelationset.h	\
+        atkselection.h		\
+        atkstate.h		\
+        atkstateset.h		\
+        atkstreamablecontent.h	\
+        atktable.h		\
+        atktext.h		\
+        atkutil.h		\
+        atkmisc.h		\
+        atkvalue.h")
+atk_sources =Split("\
+	atkaction.c		\
+	atkcomponent.c		\
+	atkdocument.c		\
+	atkeditabletext.c	\
+	atkgobjectaccessible.c	\
+	atkhyperlink.c		\
+	atkhyperlinkimpl.c	\
+	atkhypertext.c		\
+	atkimage.c		\
+	atknoopobject.c		\
+	atknoopobjectfactory.c	\
+	atkobject.c		\
+	atkobjectfactory.c	\
+	atkregistry.c		\
+	atkrelation.c		\
+	atkrelationset.c	\
+	atkselection.c		\
+	atkstate.c		\
+	atkstateset.c		\
+	atkstreamablecontent.c	\
+	atktable.c		\
+	atktext.c		\
+	atkutil.c		\
+	atkmisc.c		\
+	atkvalue.c		\
+	atk-enum-types.c")
+
+env['GLIB_GENMARSHAL'] = '%s/bin/glib-genmarshal.exe' % env['PREFIX']
+env['GLIB_GENMARSHAL_ARGV'] = [('prefix', 'atk_marshal')]
+env.MarshalGenerator(['atkmarshal.h', 'atkmarshal.c'], 'atkmarshal.list')
+env.MarshalGenerator('atkmarshal.c', 'atkmarshal.list')
+
+env_mk = env.Clone(GLIB_MKENUMS = '%s\\bin\\glib-mkenums' % env['PREFIX'])
+env_mk_h = env_mk.Clone(GLIB_MKENUMS_ARGV = (('fhead', r'"#if defined(ATK_DISABLE_SINGLE_INCLUDES) && !defined (__ATK_H_INSIDE__) && !defined (ATK_COMPILATION)\n#error \"Only <atk/atk.h> can be included directly.\"\n#endif\n\n#ifndef __ATK_ENUM_TYPES_H__\n#define __ATK_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n"'),
+                            ('fprod', r'"/* enumerations from \"@filename@\" */\n"'),
+                            ('vhead', r'"GType @enum_name@_get_type (void);\n#define ATK_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"'),
+                            ('ftail', r'"G_END_DECLS\n\n#endif /* __ATK_ENUM_TYPES_H__ */"')))
+env_mk_h.MkenumsGenerator('atk-enum-types.h', atk_headers)
+
+env_mk_c = env_mk.Clone(GLIB_MKENUMS_ARGV = (('fhead', '"#include <atk.h>"'),
+                            ('fprod', r'"\n/* enumerations from \"@filename@\" */"'),
+                            ('vhead', r'"GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {"'),
+                            ('vprod', r'"      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" },"'),
+                            ('vtail', r'"      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n"')))
+env_mk_c.MkenumsGenerator('atk-enum-types.c', atk_headers)
+
+env.Alias('install', env.Install('$PREFIX/include/atk-1.0/atk', atk_headers + ['atk-enum-types.h']))
+
+env['DOT_SYMBOLS_FLAGS'] = '-DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES'
+env.DotSymbols2Def('atk.def', 'atk.symbols')
+
+env.DotIn('atk.rc', 'atk.rc.in')
+env.RES('atk.res', 'atk.rc')
+env.ParseConfig('pkg-config glib-2.0 --cflags --libs')
+env.ParseConfig('pkg-config gobject-2.0 --cflags --libs')
+#env.Append(LIBS = ['msimg32',  'gdi32', 'user32'])
+dll = env.SharedLibrary(['libatk' + env['LIB_SUFFIX'] + '.dll', 'atk.lib'], atk_sources + ['atk.def', 'atk.res'])
+env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2')
+env.Alias('install', env.Install('$PREFIX/bin', 'libatk' + env['LIB_SUFFIX'] + '.dll'))
+env.Alias('install', env.Install('$PREFIX/lib', 'atk.lib'))
+env.Alias('install', env.InstallAs('$PREFIX/lib/libatk.lib', 'atk.lib'))
+if env['DEBUG'] == 1:
+    env.Alias('install', env.Install('$PREFIX/pdb', 'libatk.pdb'))
