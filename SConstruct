@@ -29,7 +29,7 @@ env['DOT_IN_SUBS'] = {'@ATK_MAJOR_VERSION@': str(ATK_MAJOR_VERSION),
                       '@libdir@': '${prefix}/lib',
                       '@includedir@': '${prefix}/include',
                       '@GLIB_PACKAGES@': 'glib-2.0 gobject-2.0',
-                      '@ATK_API_VERSION@': '2.0'
+                      '@ATK_API_VERSION@': '1.0'
                       }
 env.DotIn('config.h', 'config.h.in')
 env.DotIn('atk.pc', 'atk.pc.in')
