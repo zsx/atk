@@ -3,6 +3,7 @@ import tempfile
 import re
 import subprocess
 import os
+from site_init import *
 
 Import('env')
 
@@ -89,7 +90,7 @@ env_mk_c = env_mk.Clone(GLIB_MKENUMS_ARGV = (('fhead', '"#include <atk.h>"'),
                             ('vtail', r'"      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n"')))
 env_mk_c.MkenumsGenerator('atk-enum-types.c', atk_headers)
 
-env.Alias('install', env.Install('$PREFIX/include/atk-1.0/atk', atk_headers + ['atk-enum-types.h']))
+InstallDev('$PREFIX/include/atk-1.0/atk', atk_headers + ['atk-enum-types.h'], env)
 
 env['DOT_SYMBOLS_FLAGS'] = '-DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES'
 env.DotSymbols2Def('atk.def', 'atk.symbols')
@@ -101,8 +102,8 @@ env.ParseConfig('pkg-config gobject-2.0 --cflags --libs')
 #env.Append(LIBS = ['msimg32',  'gdi32', 'user32'])
 dll = env.SharedLibrary(['libatk' + env['LIB_SUFFIX'] + '.dll', 'atk-1.0.lib'], atk_sources + ['atk.def', 'atk.res'])
 env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2')
-env.Alias('install', env.Install('$PREFIX/bin', 'libatk' + env['LIB_SUFFIX'] + '.dll'))
-env.Alias('install', env.Install('$PREFIX/lib', 'atk-1.0.lib'))
-env.Alias('install', env.InstallAs('$PREFIX/lib/libatk-1.0.lib', 'atk-1.0.lib'))
+InstallRun('$PREFIX/bin', 'libatk' + env['LIB_SUFFIX'] + '.dll', env)
+InstallDev('$PREFIX/lib', 'atk-1.0.lib', env)
+InstallDevAs('$PREFIX/lib/libatk-1.0.lib', 'atk-1.0.lib', env)
 if env['DEBUG'] == 1:
-    env.Alias('install', env.Install('$PREFIX/pdb', 'libatk.pdb'))
+    InstallDev('$PREFIX/pdb', 'libatk.pdb', env)

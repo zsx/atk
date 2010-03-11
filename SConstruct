@@ -1,12 +1,13 @@
 # vim: ft=python expandtab
 import os
 import re
-from site_init import GBuilder, Initialize
+from site_init import *
 
 opts = Variables()
 opts.Add(PathVariable('PREFIX', 'Installation prefix', os.path.expanduser('~/FOSS'), PathVariable.PathIsDirCreate))
 opts.Add(BoolVariable('DEBUG', 'Build with Debugging information', 0))
 opts.Add(PathVariable('PERL', 'Path to the executable perl', r'C:\Perl\bin\perl.exe', PathVariable.PathIsFile))
+opts.Add(BoolVariable('WITH_OSMSVCRT', 'Link with the os supplied msvcrt.dll instead of the one supplied by the compiler (msvcr90.dll, for instance)', 0))
 
 env = Environment(variables = opts,
                   ENV=os.environ, tools = ['default', GBuilder])
@@ -20,6 +21,9 @@ ATK_MAJOR_VERSION=1
 ATK_MINOR_VERSION=27
 ATK_MICRO_VERSION=90
 env['ATK_VERSION'] = '%d.%d.%d' % (ATK_MAJOR_VERSION, ATK_MINOR_VERSION, ATK_MICRO_VERSION)
+env['PACKAGE_NAME'] = "atk"
+env['PACKAGE_VERSION'] = env['ATK_VERSION']
+env['PACKAGE_DEPENDS'] = 'glib'
 env['DOT_IN_SUBS'] = {'@ATK_MAJOR_VERSION@': str(ATK_MAJOR_VERSION),
                       '@ATK_MINOR_VERSION@': str(ATK_MINOR_VERSION),
                       '@ATK_MICRO_VERSION@': str(ATK_MICRO_VERSION),
@@ -33,6 +37,8 @@ env['DOT_IN_SUBS'] = {'@ATK_MAJOR_VERSION@': str(ATK_MAJOR_VERSION),
                       }
 env.DotIn('config.h', 'config.h.in')
 env.DotIn('atk.pc', 'atk.pc.in')
-env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', ['atk.pc']))
+InstallDev('$PREFIX/lib/pkgconfig', ['atk.pc'], env)
 
 SConscript(['atk/SConscript'], exports = 'env')
+
+DumpInstalledFiles(env)
