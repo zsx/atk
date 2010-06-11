@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+   <Module Id='LibatkDev' Language='1033' Version='@VERSION@'>
+      <Package Id='381630da-763a-4efb-b9fe-d8ba273789f5' Description='Libatk devlopement package'
+                Comments='This is a windows installer for libatk library devlopment files'
+                Manufacturer='Gnome4Win' InstallerVersion='200' />
+ 
+      <Directory Id='TARGETDIR' Name='SourceDir'>
+		  <Directory Id='include' Name='include'>
+			  <Component Id='headers' Guid='8e5203ff-7045-414e-9f90-c0db65bcddc2'>
+				  @HEADERS@
+			  </Component>
+		  </Directory>
+		  <Directory Id='lib' Name='lib'>
+			  <Component Id='libs' Guid='e07cf72c-c7bf-4485-9fcc-6290dcb774fe'>
+				  @LIBS@
+			  </Component>
+			  <Directory Id='pkgconfig' Name='pkgconfig'>
+				  <Component Id='pcs' Guid='dc8128de-6ea3-4970-aa57-355f171f7a85'>
+					  @PCS@
+				  </Component>
+			  </Directory>
+		  </Directory>
+                  @PDBS@
+      </Directory>
+   </Module>
+</Wix>

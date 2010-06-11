@@ -38,6 +38,7 @@ env['DOT_IN_SUBS'] = {'@ATK_MAJOR_VERSION@': str(ATK_MAJOR_VERSION),
 env.DotIn('config.h', 'config.h.in')
 env.DotIn('atk.pc', 'atk.pc.in')
 InstallDev('$PREFIX/lib/pkgconfig', ['atk.pc'], env)
+env['DOT_IN_SUBS']['@PCS@'] = generate_file_element('atk.pc', r'lib/pkgconfig', env)
 
 SConscript(['atk/SConscript'], exports = 'env')
 
