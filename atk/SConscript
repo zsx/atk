@@ -36,6 +36,7 @@ atk_headers = Split("\
         atkrelationtype.h	\
         atkrelationset.h	\
         atkselection.h		\
+        atksocket.h		\
         atkstate.h		\
         atkstateset.h		\
         atkstreamablecontent.h	\
@@ -44,6 +45,7 @@ atk_headers = Split("\
         atkutil.h		\
         atkmisc.h		\
         atkvalue.h")
+
 atk_sources =Split("\
 	atkaction.c		\
 	atkcomponent.c		\
@@ -63,6 +65,7 @@ atk_sources =Split("\
 	atkrelation.c		\
 	atkrelationset.c	\
 	atkselection.c		\
+	atksocket.c		\
 	atkstate.c		\
 	atkstateset.c		\
 	atkstreamablecontent.c	\
