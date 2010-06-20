@@ -29,6 +29,7 @@ atk_headers = Split("\
         atknoopobjectfactory.h	\
         atkobject.h		\
 	atkobjectfactory.h	\
+        atkplug.h		\
         atkimage.h		\
         atkregistry.h		\
         atkrelation.h		\
@@ -57,6 +58,7 @@ atk_sources =Split("\
 	atknoopobjectfactory.c	\
 	atkobject.c		\
 	atkobjectfactory.c	\
+	atkplug.c		\
 	atkregistry.c		\
 	atkrelation.c		\
 	atkrelationset.c	\
